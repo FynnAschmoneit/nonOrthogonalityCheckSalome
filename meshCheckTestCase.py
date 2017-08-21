@@ -25,7 +25,7 @@ geompy = geomBuilder.New(salome.myStudy)
 from salome.smesh import smeshBuilder
 smesh =  smeshBuilder.New(salome.myStudy)
 
-from meshQualityCheck import MeshQualityCheck			# to get division with rest from python 3
+from meshQualityCheck import MeshQualityCheck
 
 p1 = geompy.MakeVertex(0, 0, 0)
 p2 = geompy.MakeVertex(5, 0, 2)
@@ -48,7 +48,7 @@ algo1D = mesh.Segment()
 algo2D = mesh.Triangle()
 algo3D = mesh.Tetrahedron()
 
-EBL = 1
+EBL = 1		# egde base length
 
 algo1D.LocalLength(EBL)
 algo3D.ViscousLayers(EBL*0.2, 1, 1.6, [ faceList[2], faceList[3] ] )
@@ -72,5 +72,5 @@ for k, v in grDict.iteritems():
 
 mesh.ExportUNV("meshCheckTestMesh.unv")		
 
-MQC = MeshQualityCheck( mesh )
+MQC = MeshQualityCheck( mesh, 70, 2 )
 MQC.checkMesh()

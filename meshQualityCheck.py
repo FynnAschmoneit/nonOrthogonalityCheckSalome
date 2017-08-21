@@ -31,11 +31,27 @@ smesh =  smeshBuilder.New(salome.myStudy)
 
 class MeshQualityCheck:
 
-	def __init__(self, MESH):
+	def __init__(self, MESH, nonOrthThreshold = None, skewThreshold = None):
 		self.mesh = MESH
-		self.progressOutput = True
+		
+		if(nonOrthThreshold is None): 
+			self.nonOrthogonalThreshold = 65
+		else:
+			self.nonOrthogonalThreshold = nonOrthThreshold
+
+		if(skewThreshold is None):
+			self.skewnessThreshold = 0.5
+		else:
+			self.skewnessThreshold = skewThreshold
+		
 		self.nonOrthogonalityCheck = True
 		self.skewnessCheck = True
+		if( self.nonOrthogonalThreshold == 0):
+			self.nonOrthogonalityCheck = False
+		if( self.skewnessThreshold == 0):
+			self.skewnessCheck = False
+
+		self.progressOutput = True
 		self.groupsForFailedVolumePairs = True
 		
 		self.outputPreSting = "MeshQualityCheck:\t\t"
@@ -43,12 +59,10 @@ class MeshQualityCheck:
 		self.nbInternalFaces = 0
 
 		self.nonOrthogonalVolPairs = []
-		self.nonOrthogonalThreshold = 70
 		self.avNonOrth = 0
 		self.maxNonOrth = 0
 
 		self.tooSkewVolPairs = []
-		self.skewnessThreshold = 2
 		self.avSkew = 0
 		self.maxSkew = 0
 
@@ -124,7 +138,7 @@ class MeshQualityCheck:
 
 		if( self.nonOrthogonalityCheck ):
 			print self.outputPreSting + "non-orthogonality threshold: ", self.nonOrthogonalThreshold
-			print self.outputPreSting + "no of non-orthogonal faces: ", len(self.nonOrthogonalVolPairs)
+			print self.outputPreSting + "number of non-orthogonal faces: ", len(self.nonOrthogonalVolPairs)
 			print self.outputPreSting + "average non-orthogonality: ", self.avNonOrth
 			print self.outputPreSting + "max non-orthogonality: ", self.maxNonOrth
 		if( self.skewnessCheck ):
